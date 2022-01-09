@@ -1,1 +1,1 @@
-# SoftUni---Java---DB
+# SoftUni---Java---MySQL

@@ -1,95 +1,262 @@
-CREATE DATABASE IF NOT EXISTS `hotel`; 
-USE `hotel`;
+# 6.
+DROP TABLE people;
 
-CREATE TABLE departments (
+CREATE TABLE people (
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	name VARCHAR(50)
+    `name` VARCHAR(200) NOT NULL,
+    picture BLOB,
+    height DOUBLE(10,2),
+    weight DOUBLE(10,2),
+    gender CHAR(1) NOT NULL,
+    birthdate DATE NOT NULL,
+	biography TEXT
 );
 
-INSERT INTO departments(name) VALUES('Front Office'), ('Support'), ('Kitchen'), ('Other');
 
-CREATE TABLE employees (
+INSERT INTO people(`name`, height, weight, gender, birthdate, biography)
+VALUES('pencho', '1.65', '67', 'm', '1996-12-03', 'dsafasfdsa'),
+('az', 1.55, 63, 'f', '1996-12-03', 'dsafasfdsa'),
+('sum', 1.75, 54, 'm', '1996-12-03', 'dsafasfdsa'),
+('tuk', 1.75, 54, 'f', '1996-12-03', 'dsafasfdsa'),
+('iaz', 1.75, 54, 'm', '1996-12-03', 'dsafasfdsa');
+
+# 7. 
+
+CREATE TABLE users(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	first_name VARCHAR(50) NOT NULL,
-	last_name VARCHAR(50) NOT NULL,
-	job_title VARCHAR(50) NOT NULL,
-	department_id INT NOT NULL,
-	salary DOUBLE NOT NULL,
-	CONSTRAINT `fk_department_id` FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`)
+    username VARCHAR(30) NOT NULL,
+    `password` VARCHAR(26) NOT NULL,
+    profile_picture BLOB,
+    last_login_time TIMESTAMP,
+    is_deleted BOOLEAN
 );
 
-INSERT INTO `employees` (`first_name`,`last_name`, `job_title`,`department_id`,`salary`) VALUES
-	('John', 'Smith', 'Manager',1, 900.00),
-	('John', 'Johnson', 'Customer Service',2, 880.00),
-	('Smith', 'Johnson', 'Porter', 4, 1100.00),
-	('Peter', 'Petrov', 'Front Desk Clerk', 1, 1100.00),
-	('Peter', 'Ivanov', 'Sales', 2, 1500.23),
-	('Ivan' ,'Petrov', 'Waiter', 3, 990.00),
-	('Jack', 'Jackson', 'Executive Chef', 3, 1800.00),
-	('Pedro', 'Petrov', 'Front Desk Supervisor', 1, 2100.00),
-	('Nikolay', 'Ivanov', 'Housekeeping', 4, 1600.00);
-	
+INSERT INTO users(`username`, `password`)
+VALUES('pencho', '123'),
+('az', '3435'),
+('az', '3435'),
+('az', '3435'),
+('az', '3435');
 
-	
-CREATE TABLE rooms (
+# 9. 
+
+ALTER TABLE users
+CHANGE COLUMN last_login_time last_login_time
+TIMESTAMP DEFAULT NOW();
+
+
+# 10.
+ALTER TABLE users
+DROP PRIMARY KEY,
+ADD CONSTRAINT PRIMARY KEY users(id),
+ADD CONSTRAINT UNIQUE users(username);
+
+# 11. 
+
+CREATE DATABASE Movies;
+USE Movies;
+
+CREATE TABLE directors(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	`type` VARCHAR(30)
+    director_name VARCHAR(50) NOT NULL,
+    notes TEXT
 );
 
-INSERT INTO rooms(`type`) VALUES('apartment'), ('single room');
+INSERT INTO directors(director_name)
+VALUES('pencho'),
+('az'),
+('az'),
+('az'),
+('az');
 
-CREATE TABLE clients (
+CREATE TABLE genres(
 	id INT PRIMARY KEY AUTO_INCREMENT,
-	first_name VARCHAR(50),
-	last_name VARCHAR(50),
-	room_id INT NOT NULL,
-    CONSTRAINT fk_clients_rooms
-    FOREIGN KEY (room_id)
-    REFERENCES rooms(id)
+    genre_name VARCHAR(50) NOT NULL,
+    notes TEXT
 );
 
-INSERT INTO clients(`first_name`,`last_name`,`room_id`) 
-VALUES('Pesho','Petrov', 1),('Gosho','Georgiev', 2),
-('Mariya','Marieva', 2), ('Katya','Katerinova', 1), ('Nikolay','Nikolaev', 2);
+INSERT INTO genres(genre_name)
+VALUES('pencho'),
+('az'),
+('az'),
+('az'),
+('az');
+
+
+CREATE TABLE categories(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    category_name VARCHAR(50) NOT NULL,
+    notes TEXT
+);
+
+INSERT INTO categories(category_name)
+VALUES('pencho'),
+('az'),
+('az'),
+('az'),
+('az');
+
+CREATE TABLE movies(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(50) NOT NULL,
+    director_id INT,
+    copyright_year INT,
+    `length` DOUBLE,
+    genre_id INT, 
+    category_id INT, 
+    rating DOUBLE,
+    notes TEXT
+);
+
+INSERT INTO movies(title)
+VALUES('pencho'),
+('az'),
+('az'),
+('az'),
+('az');
 
 
 
-/* 1. */ 
-SELECT id, first_name, last_name, job_title
-FROM employees
-ORDER BY id ASC;
+INSERT INTO towns(`name`)
+VALUES ('Sofia'),
+('Plovdiv'),
+('Varna'),
+('Burgas');
+
+INSERT INTO departments(`name`)
+VALUES ('Engineering'),
+('Sales'),
+('Marketing'),
+('Software Development'),
+('Quality Assurance');
+
+INSERT INTO employees(first_name, middle_name, last_name, job_title, department_id, hire_date, salary)
+VALUES('Ivan', 'Ivanov', 'Ivanov', '.NET Developer', '4', '2013-02-01', 3500.00),
+('Petar', 'Petrov', 'Petrov', 'Senior Engineer', '1', '2004-03-02', 4000.00),
+('Maria', 'Petrova', 'Ivanova', 'Intern', '5', '2016-08-28', 525.25),
+('Georgi', 'Terziev', 'Ivanov', 'CEO', '2', '2007-12-09', 3000.00),
+('Peter', 'Pan', 'Pan', 'Intern', '3', '2016-08-28', 599.88);
 
 
-/* 2. */ 
-SELECT id, CONCAT(first_name, ' ', last_name) AS 'full_name', job_title, salary
-FROM employees
-WHERE salary > 1000 
-ORDER BY id;
+# 15.
 
-/* 3. */ 
+SELECT * FROM towns;
+SELECT * FROM departments;
+SELECT * FROM employees; 
+
+
+# 17.
+
+SELECT name FROM towns 
+ORDER BY towns.name;
+
+SELECT name FROM departments 
+ORDER BY departments.name;
+
+SELECT first_name, last_name, job_title, salary FROM employees 
+ORDER BY employees.salary DESC;
+
+# 18.
+
 UPDATE employees
-SET salary = salary + 100
-WHERE job_title = 'Manager';
+SET salary = salary*1.1;
 
 SELECT salary FROM employees;
 
-/* 4. */ 
-CREATE VIEW `first_view` AS
-SELECT * FROM hotel.employees
-ORDER BY salary DESC LIMIT 1;
 
-SELECT * FROM first_view;
+# 12. 
+CREATE TABLE categories (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    category VARCHAR(30) NOT NULL,
+    daily_rate DOUBLE,
+    weekly_rate DOUBLE,
+    monthly_rate DOUBLE,
+    weekend_rate DOUBLE
+);
+
+INSERT INTO categories(category)
+VALUES 
+('action'),
+('drama'),
+('comedy');
 
 
-/* 5. */ 
-SELECT * FROM employees
-WHERE department_id IN (4) AND salary >= 1000
-ORDER BY id;
+CREATE TABLE cars(
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    plate_number VARCHAR(10) NOT NULL,
+    make DATE, 
+    model VARCHAR(30) NOT NULL,
+    car_year YEAR,
+    category_id INT,
+    doors INT, 
+    picture BLOB, 
+    car_condition TEXT,
+    available BOOLEAN,
+    CONSTRAINT fk_cars_category 
+	FOREIGN KEY cars(id) REFERENCES categories(id)
+);
 
-/* 6. */ 
-DELETE FROM employees 
-WHERE department_id IN (1,2);
+INSERT INTO categories(plate_number, model)
+VALUES 
+('FASDAF', 'OPEL'),
+('FASDFASFD', 'OPEL'),
+('FASFASF', 'SKODA');
 
-SELECT * FROM employees 
-ORDER BY id;
+CREATE TABLE employees (	
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(30),
+    last_name VARCHAR(20),
+    title VARCHAR(20), 
+    notes TEXT
+);
+
+INSERT INTO employees(first_name, last_name)
+VALUES 
+('FASDAF', 'OPEL'),
+('FASDFASFD', 'OPEL'),
+('FASFASF', 'SKODA');
+
+CREATE TABLE customers (
+	id INT PRIMARY KEY AUTO_INCREMENT, 
+    driver_licence_number INT(6),
+    full_name VARCHAR(20), 
+    address VARCHAR(20), 
+    city VARCHAR(20), 
+    zip_code INT(4), 
+    notes TEXT
+);
+
+INSERT INTO customers(driver_licence_number, full_name)
+VALUES 
+('123145', 'OPEL'),
+('123145', 'OPEL'),
+('123145', 'SKODA');
+
+
+CREATE TABLE rental_orders (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT, 
+    customer_id INT, 
+    car_id INT,
+    car_condition TEXT, 
+    tank_level INT, 
+    kilometrage_start INT,
+    kilometrage_end INT, 
+    total_kilometrage INT, 
+    start_date DATETIME, 
+    end_date DATETIME, 
+    total_days INT, 
+    rate_applied DOUBLE, 
+    tax_rate DOUBLE, 
+    order_status BOOLEAN, 
+    notes TEXT,
+    CONSTRAINT fk_rental_orders_employee FOREIGN KEY rental_orders(employee_id) REFERENCES employees(id),
+    CONSTRAINT fk_rental_orders_customer FOREIGN KEY rental_orders(customer_id) REFERENCES customers(id),
+    CONSTRAINT fk_rental_orders_cars FOREIGN KEY rental_orders(car_id) REFERENCES cars(id)
+);
+
+INSERT INTO rental_orders(employee_id, customer_id, car_id)
+VALUES (3, 2, 1),
+(2, 1, 2),
+(1, 3, 3);
 
